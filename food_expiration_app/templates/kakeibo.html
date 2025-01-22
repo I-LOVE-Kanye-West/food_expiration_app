@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>家計簿</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="icon" href="/static/icons/calculator.png" type="image/png">
+    <style>
+        /* 共通スタイル */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            color: #333;
+        }
+
+        header {
+            background-color: #365aeb;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        header p {
+            font-size: 1.2rem;
+        }
+
+        /* ハンバーガーメニュー */
+        .menu-toggle {
+            display: block;
+            cursor: pointer;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .menu-toggle span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            margin: 5px auto;
+            background-color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            width: 200px;
+            text-align: center;
+            padding: 10px 0;
+            transition: all 0.3s ease-in-out;
+        }
+
+        nav.active {
+            display: block;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav ul li {
+            border-bottom: 1px solid #ddd;
+        }
+
+        nav ul li:last-child {
+            border-bottom: none;
+        }
+
+        nav ul li a {
+            display: block;
+            padding: 12px;
+            text-decoration: none;
+            color: #365aeb;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: #f1f5f8;
+            color: #365aeb;
+        }
+
+        /* デスクトップ表示 */
+        @media (min-width: 768px) {
+            .menu-toggle {
+                display: none;
+            }
+
+            nav {
+                display: block;
+                position: static;
+                background: none;
+                box-shadow: none;
+                width: auto;
+            }
+
+            nav ul {
+                display: flex;
+                justify-content: center;
+            }
+
+            nav ul li {
+                border: none;
+            }
+
+            nav ul li a {
+                padding: 12px 20px;
+                color: white;
+                background-color: #365aeb;
+                border-radius: 6px;
+                margin: 0 10px;
+                transition: background-color 0.3s ease, color 0.3s ease;
+            }
+
+            nav ul li a:hover {
+                background-color: #4e73df;
+                color: #fff;
+            }
+        }
+
+        /* メインコンテンツ */
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 食品リスト */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #f9fafb;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f4f6f9;
+        }
+
+        table tr:hover {
+            background-color: #f1f5f8;
+        }
+
+        .delete-button {
+            color: white;
+            background-color: #dc3545;
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #f1f1f1;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        /* フォーム */
+        form {
+            margin-bottom: 20px;
+        }
+
+        form select {
+            padding: 8px;
+            font-size: 1.1rem;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            outline: none;
+            width: 100%;
+        }
+
+        form select:focus {
+            border-color: #365aeb;
+            box-shadow: 0 0 5px rgba(54, 90, 235, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>家計簿</h1>
+        <p>取引の管理を簡単に</p>
+        <button class="menu-toggle" aria-label="メニューを開く">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <!-- ナビゲーションメニュー -->
+        <nav>
+            <ul>
+                <li><a href="/">ホーム(期限管理)</a></li>
+                <li><a href="/add">食品を追加</a></li>
+                <li><a href="/kakeibo">家計簿</a></li> <!-- 家計簿項目を追加 -->
+                <li><a href="/register">通知登録</a></li>
+                {% if session.user_id %}
+                    <li><a href="{{ url_for('logout') }}">ログアウト</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>取引を追加</h2>
+        <form method="POST">
+            <label for="amount">金額:</label>
+            <input type="number" id="amount" name="amount" required>
+
+            <label for="category">カテゴリ:</label>
+            <select id="category" name="category">
+                <option value="食費">食費</option>
+                <option value="日用品">日用品</option>
+                <option value="交通費">交通費</option>
+                <option value="通信費">通信費</option>
+                <option value="公共料金">公共料金</option>
+                <option value="趣味">趣味</option>
+                <option value="教育費">教育費</option>
+                <option value="衣服費">衣服費</option>
+                <option value="その他">その他</option>
+            </select>
+
+            <label for="date">日付:</label>
+            <input type="date" id="date" name="date" required>
+
+            <label for="income_expense">収支:</label>
+            <select id="income_expense" name="income_expense" required>
+                <option value="支出">支出</option>
+                <option value="収入">収入</option>
+            </select>
+
+            <label for="details">詳細:</label>
+            <textarea id="details" name="details" required></textarea>
+
+            <button type="submit">追加</button>
+        </form>
+
+        <div class="summary">
+            <p>収入合計: ¥{{ total_income }}</p>
+            <p>支出合計: ¥{{ total_expense }}</p>
+            <p>合計金額: ¥{{ total_amount }}</p>
+        </div>
+
+        <h2>取引リスト</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>金額</th>
+                    <th>カテゴリ</th>
+                    <th>日付</th>
+                    <th>収支</th>
+                    <th>詳細</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in transactions %}
+                <tr>
+                    <td>¥{{ transaction[1] }}</td>  <!-- 金額の横の円マーク -->
+                    <td>{{ transaction[2] }}</td>
+                    <td>{{ transaction[3] }}</td>
+                    <td>{{ transaction[4] }}</td>
+                    <td>{{ transaction[5] }}</td>
+                    <td>
+                        <a href="{{ url_for('delete_transaction', transaction_id=transaction[0]) }}" class="delete-button">削除</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 卒研</p>
+    </footer>
+
+    <script>
+        document.querySelector('.menu-toggle').addEventListener('click', function() {
+            const nav = document.querySelector('nav');
+            nav.classList.toggle('active');
+        });
+    </script>
+
+</body>
+</html>

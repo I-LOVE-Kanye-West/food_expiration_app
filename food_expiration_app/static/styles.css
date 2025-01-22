@@ -1,0 +1,276 @@
+/* 全体のスタイル */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f6f9;
+    margin: 0;
+    padding: 0;
+    color: #010101;
+}
+
+header {
+    background-color: #4e73df;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(224, 9, 9, 0.1);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.8rem;
+    letter-spacing: 1px;
+}
+
+header p {
+    font-size: 1.2rem;
+    margin-top: 5px;
+    font-weight: 300;
+}
+
+/* メインコンテンツ */
+main {
+    max-width: 900px;
+    margin: 40px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* セクションタイトル */
+section h2 {
+    color: #4e73df;
+    font-size: 2rem;
+    margin-bottom: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* フォーム */
+form {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+form select {
+    padding: 10px;
+    font-size: 1.1rem;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    margin-top: 10px;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+}
+
+form select:focus {
+    border-color: #4e73df;
+    box-shadow: 0 0 5px rgba(78, 115, 223, 0.4);
+}
+
+/* 食品テーブル */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th, table td {
+    border: 1px solid #e0e0e0;
+    padding: 12px;
+    text-align: left;
+    transition: all 0.3s ease;
+}
+
+table th {
+    background-color: #f5f8fc;
+    font-weight: 600;
+}
+
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tr:hover {
+    background-color: #f1f5f8;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* 削除ボタン */
+.delete-button {
+    color: white;
+    background-color: #e74a3b;
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.delete-button:hover {
+    background-color: #d6352b;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 通常のリンク */
+a {
+    text-decoration: none;
+    color: #0077d8; /* リンクカラーを青色に変更 */
+    font-weight: 500;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #000000; /* ホバー時の色を変更 */
+}
+
+/* 食品追加リンク */
+h2 a {
+    display: inline-block;
+    margin-top: 15px;
+    color: white;
+    background-color: #28a745;
+    padding: 12px 18px;
+    border-radius: 6px;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+h2 a:hover {
+    background-color: #218838;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* フッター */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #f1f1f1;
+    margin-top: 40px;
+    font-size: 1rem;
+    color: #777;
+}
+
+/* ハンバーガーメニュー */
+.menu-toggle {
+    display: block;
+    cursor: pointer;
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    position: absolute;
+    top: 25px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 30px;
+    height: 4px;
+    margin: 6px auto;
+    background-color: #333; /* アイコンの色を変更 */
+    border-radius: 5px;
+}
+
+nav {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background-color: #000000; /* メニューの背景色 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    width: 250px;
+    z-index: 100;
+    text-align: center;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    border-bottom: 1px solid #ddd;
+}
+
+nav ul li:last-child {
+    border-bottom: none;
+}
+
+nav ul li a {
+    display: block;
+    padding: 12px;
+    text-decoration: none;
+    color: #ffffff; /* ナビゲーションリンクの色 */
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+nav ul li a:hover {
+    background-color: #010101; /* ホバー時の色 */
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 600px) {
+    main {
+        padding: 15px;
+    }
+
+    table th, table td {
+        padding: 8px;
+    }
+
+    h2 a {
+        font-size: 1rem;
+        padding: 10px 15px;
+    }
+
+    nav {
+        width: 100%;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    nav ul {
+        display: block;
+        text-align: left;
+    }
+
+    nav ul li {
+        border: none;
+    }
+}
+
+@media (min-width: 768px) {
+    .menu-toggle {
+        display: none;
+    }
+
+    nav {
+        display: block;
+        position: static;
+        background: none;
+        box-shadow: none;
+        width: auto;
+    }
+
+    nav ul {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    nav ul li {
+        border: none;
+    }
+
+    nav ul li a {
+        padding: 12px 18px;
+    }
+}

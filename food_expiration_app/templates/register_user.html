@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新規会員登録</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="icon" href="/static/icons/food-badge.png" type="image/png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .register-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 320px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-size: 16px;
+            color: #555;
+            text-align: left;
+        }
+
+        input {
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-top: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #365abe;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #4e73df;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        p {
+            font-size: 14px;
+            color: #333;
+        }
+
+        a {
+            color: #365abe;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="register-container">
+        <h1>新規会員登録</h1>
+        <form method="POST">
+            <div>
+                <label for="user_id">ユーザーID:</label>
+                <input 
+                    type="text" 
+                    id="user_id" 
+                    name="user_id" 
+                    required 
+                    pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,}$" 
+                    title="ユーザーIDはアルファベットと数字を含む5文字以上で入力してください。"
+                >
+                <small style="color: #555; font-size: 12px;">
+                    ※ ユーザーIDはアルファベットと数字を含む5文字以上で入力してください。
+                </small><br>
+            </div>
+
+            <div>
+                <label for="password">パスワード:</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    required 
+                    pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,}$" 
+                    title="パスワードはアルファベットと数字を含む5文字以上で入力してください。"
+                >
+                <small style="color: #555; font-size: 12px;">
+                    ※ パスワードはアルファベットと数字を含む5文字以上で入力してください。
+                </small><br>
+            </div>
+
+            <div>
+                <button type="submit">登録</button>
+            </div>
+        </form>
+
+        {% if error %}
+        <div class="error-message">
+            <p>{{ error }}</p>
+        </div>
+        {% endif %}
+
+        <p>すでにアカウントをお持ちですか？ <a href="{{ url_for('login') }}">ログイン</a></p>
+    </div>
+
+</body>
+</html>

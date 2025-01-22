@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>通知登録</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="icon" href="/static/icons/bell.png" type="image/png">
+    <style>
+         body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h1 {
+            color: #4e73df;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #4e73df;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #365aeb;
+        }
+        p {
+            font-size: 14px;
+            color: #333;
+        }
+        a {
+            color: #365aeb;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>通知を購読する</h1>
+        <button id="subscribeButton">通知を有効化</button>
+        <p><a href="/">ホーム(期限管理)画面へ</a></p>
+    </div>
+
+    <script>
+        // Base64エンコードされたVAPID公開鍵をUint8Arrayに変換する関数
+        function convertBase64ToUint8Array(base64String) {
+            const padding = '='.repeat((4 - base64String.length % 4) % 4);
+            const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+            const rawData = atob(base64);
+            const outputArray = new Uint8Array(rawData.length);
+
+            for (let i = 0; i < rawData.length; ++i) {
+                outputArray[i] = rawData.charCodeAt(i);
+            }
+
+            return outputArray;
+        }
+
+        // Service WorkerとPush通知の購読処理
+        if ('serviceWorker' in navigator && 'PushManager' in window) {
+            navigator.serviceWorker.register('/static/service-worker.js')
+                .then(function(registration) {
+                    console.log('Service Worker registered:', registration);
+
+                    // Push通知購読ボタンのイベント
+                    document.getElementById('subscribeButton').addEventListener('click', function() {
+                        // VAPID公開鍵（Base64urlエンコード形式）
+                        const vapidPublicKey = 'BKX3d2SLf6e93syXaeuVHdCO82WnzHczZZVm4_pJziQVJPTY8XlBKzDyDLyUnsVpPd5J1DnpLxxurHr04O5MyA8';
+
+                        // VAPID公開鍵をUint8Arrayに変換
+                        const applicationServerKey = convertBase64ToUint8Array(vapidPublicKey);
+
+                        // Push通知の購読を開始
+                        registration.pushManager.subscribe({
+                            userVisibleOnly: true,
+                            applicationServerKey: applicationServerKey
+                        }).then(function(subscription) {
+                            console.log('Push subscription created:', subscription);
+
+                            // サーバーに購読情報を送信
+                            return fetch('/subscribe', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(subscription)
+                            });
+                        }).then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('通知が有効になりました！');
+                            } else {
+                                alert('通知の購読に失敗しました。');
+                            }
+                        }).catch(function(error) {
+                            console.error('Push subscription failed:', error);
+                            alert('通知購読に失敗しました。');
+                        });
+                    });
+                })
+                .catch(function(error) {
+                    console.error('Service Worker registration failed:', error);
+                    alert('サービスワーカーの登録に失敗しました。');
+                });
+        } else {
+            alert('このブラウザは通知やサービスワーカーをサポートしていません。');
+        }
+    </script>
+</body>
+</html>
